@@ -1,5 +1,5 @@
 import { ProxyAgent, setGlobalDispatcher } from "undici";
-import { Scraper } from "agent-twitter-client";
+import { Scraper, Tweet } from "agent-twitter-client";
 import fs from "fs";
 import dotenv from "dotenv";
 import pino from "pino";
@@ -169,3 +169,14 @@ export async function getScraper(
 
   return scraper;
 }
+
+export const displayTweet = (tweet: Tweet) => {
+  logger.info(`\n ===== ${tweet.id} ===== \n`);
+  logger.info(tweet.text);
+  logger.info(`photos: ${JSON.stringify(tweet.photos)}`);
+  logger.info(`videos: ${JSON.stringify(tweet.videos)}`);
+  logger.info(`urls: ${JSON.stringify(tweet.urls)}`);
+  logger.info(`mentions: ${JSON.stringify(tweet.mentions)}`);
+  logger.info(`hashtags: ${JSON.stringify(tweet.hashtags)}`);
+  logger.info(`timestamp: ${tweet.timestamp}`);
+};

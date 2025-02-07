@@ -3,7 +3,7 @@ import { createOpenAI } from "@ai-sdk/openai";
 import axios, { AxiosHeaders } from "axios";
 import { logger } from "./utils";
 
-const translate = async (text: string) => {
+const newOpenAI = () => {
   const ai = createOpenAI({
     apiKey: process.env.OPENAI_API_KEY,
     baseURL: process.env.OPENAI_BASE_URL,
@@ -16,7 +16,6 @@ const translate = async (text: string) => {
         headers.set("Content-Type", "application/json");
         headers.set("Authorization", `Bearer ${process.env.OPENAI_API_KEY}`);
         const response = await axios.post(url, init.body, { headers });
-
         // Mimic the fetch Response object
         return new Response(JSON.stringify(response.data), {
           status: response.status,
@@ -26,13 +25,17 @@ const translate = async (text: string) => {
       return fetch(input, init);
     },
   });
+  return ai;
+};
 
+const openai = newOpenAI();
+
+const translate = async (text: string, model: string = "gpt-4o") => {
   const { text: translatedText } = await generateText({
-    model: ai("gpt-4o"),
+    model: openai(model),
     system: "You are a friendly assistant!",
     prompt: `Translate the following text to Chinese: ${text}`,
   });
-
   console.log(translatedText);
   return translatedText;
 };
